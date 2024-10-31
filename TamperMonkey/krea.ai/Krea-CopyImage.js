@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         KreaImage
+// @name         Copy Result to Clipboard
 // @namespace    http://tampermonkey.net/
 // @version      2024-10-31
 // @description  Adds two buttons next to donload button, one for copying the improved image into clipboard and one to open the improved image in the new tab

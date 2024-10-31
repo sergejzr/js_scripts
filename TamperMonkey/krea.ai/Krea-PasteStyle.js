@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         CopyPaste
+// @name         Paste CLipboard to style
 // @namespace    http://tampermonkey.net/
 // @version      2024-10-31
 // @description  Adds a button to style change area that wil paste the image from the clipboard into the style image
