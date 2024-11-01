@@ -56,11 +56,13 @@ This script is built for Foocus applications that use Svelte for image handling.
 // ==UserScript==
 // @name         Foocus Paster
 // @namespace    http://tampermonkey.net/
+// @author       sergejzr
 // @version      2024-10-31
 // @description  Adds clipboard paste buttons to Foocus upload fields
 // @match        http://127.0.0.1:7865*
 // @grant        none
-// ==/UserScript==
+```
+
 This script targets the local Foocus application at http://127.0.0.1:7865 and is designed to work with various image handling elements based on the Svelte framework.
 
 ### Clipboard Detection
