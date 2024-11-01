@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      2024-10-31
 // @author       sergejzr, chatGPT
-// @description  Adds clipboard paste buttons to Foocus upload fields with dynamic icon color.
+// @description  Adds clipboard paste buttons to Foocus upload fields
 // @match        http://127.0.0.1:7865*
 // @grant        none
 // ==/UserScript==
