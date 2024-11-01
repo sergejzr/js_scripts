@@ -2,8 +2,8 @@
 // @name         Foocus Paster
 // @namespace    http://tampermonkey.net/
 // @version      2024-10-31
-// @author       sergejzr
-// @description  Adds clipboard paste buttons to Foocus image upload fields. No intermediate files more necessary!
+// @author       sergejzr, chatGPT
+// @description  Adds clipboard paste buttons to Foocus upload fields with dynamic icon color.
 // @match        http://127.0.0.1:7865*
 // @grant        none
 // ==/UserScript==
@@ -53,23 +53,57 @@
             });
         }
 
+        // Convert blob to Data URL and validate the image
+        async function blobToDataURL(blob) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = () => reject(new Error("Failed to convert blob to data URL"));
+                reader.readAsDataURL(blob);
+            });
+        }
+
         async function handlePasteFromClipboard(hiddenUploadInput) {
-            try {
-                const clipboardItems = await navigator.clipboard.read();
-                for (const item of clipboardItems) {
-                    if (item.types.includes('image/png') || item.types.includes('image/jpeg') || item.types.includes('image/gif')) {
-                        const blob = await item.getType(item.types[0]);
-                        if (blob) {
-                            const file = new File([blob], 'clipboard-image.png', { type: blob.type });
-                            await simulateFileUpload(file, hiddenUploadInput);
-                        }
-                    }
+    try {
+        const clipboardItems = await navigator.clipboard.read();
+        console.log("Clipboard Items on Paste:", clipboardItems); // Debugging log
+
+        for (const item of clipboardItems) {
+            console.log("Item Types:", item.types);
+
+            // Look for an image type first, preferring image types over text/html
+            const imageType = item.types.find(type => type === 'image/png' || type === 'image/jpeg' || type === 'image/gif');
+
+            if (imageType) {
+                console.log("Found image type:", imageType);
+
+                const blob = await item.getType(imageType);
+                if (blob) {
+                    // Convert blob to data URL and validate as an image
+                    const dataURL = await blobToDataURL(blob);
+                    const img = new Image();
+                    img.src = dataURL;
+
+                    img.onload = async () => {
+                        const file = new File([blob], 'clipboard-image.png', { type: blob.type });
+                        await simulateFileUpload(file, hiddenUploadInput);
+                    };
+
+                    img.onerror = () => {
+                        console.error("Failed to load image from clipboard");
+                        alert("The image copied from the webpage could not be processed. Please try another image.");
+                    };
                 }
-            } catch (error) {
-                console.error('Error accessing clipboard:', error);
-                alert('Unable to access clipboard. Please copy an image to the clipboard first.');
+            } else {
+                console.log("No supported image type found in clipboard item.");
+                alert("No valid image format found in the clipboard. Please try copying a different image.");
             }
         }
+    } catch (error) {
+        console.error('Error accessing clipboard:', error);
+        alert('Unable to access clipboard. Please copy an image to the clipboard first.');
+    }
+}
 
         async function simulateFileUpload(file, hiddenUploadInput) {
             if (!hiddenUploadInput) {
@@ -87,9 +121,13 @@
         async function updateButtonState(button) {
             try {
                 const clipboardItems = await navigator.clipboard.read();
+                console.log("Clipboard Items on Update:", clipboardItems); // Debugging log
+
                 let hasImage = false;
 
                 for (const item of clipboardItems) {
+                    console.log("Item Types on Update:", item.types); // Debugging log
+
                     if (item.types.includes('image/png') || item.types.includes('image/jpeg') || item.types.includes('image/gif')) {
                         hasImage = true;
                         break;
