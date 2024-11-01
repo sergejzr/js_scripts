@@ -56,7 +56,7 @@ This script is built for Foocus applications that use Svelte for image handling.
 // ==UserScript==
 // @name         Foocus Paster
 // @namespace    http://tampermonkey.net/
-// @author       sergejzr
+// @author       sergejzr, chatGPT
 // @version      2024-10-31
 // @description  Adds clipboard paste buttons to Foocus upload fields
 // @match        http://127.0.0.1:7865*
